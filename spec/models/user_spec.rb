@@ -18,7 +18,8 @@ RSpec.describe User, type: :model do
     end
 
     it '全ての項目が入力されていれば登録できる' do
-      
+      @user = FactoryBot.build(:user)
+      expect(@user).to be_valid
     end
 
     it '重複したemailが存在する場合登録できない' do
