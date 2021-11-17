@@ -9,10 +9,11 @@
     <div class="item-img-content">
       <%= image_tag @item.image ,class:"item-box-img" %>
       <%# 商品が売れている場合は、sold outを表示しましょう %>
-      <% if @item.present? %>
-      <%#<div class="sold-out">%>
-        <%#<span>Sold Out!!</span>%>
-      <%#</div>%>
+      <% if @item.order.present? %>
+        <div class="sold-out">
+          <span>Sold Out!!</span>
+        </div>
+      <% end %>
       <%# //商品が売れている場合は、sold outを表示しましょう %>
     </div>
     <div class="item-price-box">
@@ -25,7 +26,7 @@
     </div>
 
     <%# if 'ユーザーがログインしている 且つ 商品が出品中である' %>
-    <% if user_signed_in? %>
+    <% if user_signed_in? && @item.order.blank?%>
       <%# if '商品詳細画面にアクセスしたユーザーが出品者である' %>
       <% if current_user.id == @item.user_id %>
 
