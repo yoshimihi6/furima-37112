@@ -11,6 +11,9 @@ RSpec.describe OrderAddress, type: :model do
     end
 
     context '商品が購入できる時' do
+      it '全て入力されている時は購入できる' do
+        expect(@order_address).to be_valid
+      end
       it 'building_nameは空でも保存できる' do
         @order_address.building_name = ''
         expect(@order_address).to be_valid
@@ -60,10 +63,28 @@ RSpec.describe OrderAddress, type: :model do
         expect(@order_address.errors.full_messages).to include("Telephone number can't be blank", "Telephone number is invalid. Include hyphen(-)")
       end
 
-      it '電話番号は10桁以上11桁以内の半角数値以外は購入できない' do
-        @order_address.telephone_number = '11111'
+      it '電話番号が12桁以上では購入できない' do
+        @order_address.telephone_number = '1111111111111'
         @order_address.valid?
         expect(@order_address.errors.full_messages).to include("Telephone number is invalid. Include hyphen(-)")
+      end
+
+      it '電話番号に半角数字以外が含まれている場合は購入できない' do
+        @order_address.telephone_number = 'ああああああああああ'
+        @order_address.valid?
+        expect(@order_address.errors.full_messages).to include("Telephone number is invalid. Include hyphen(-)")
+      end
+
+      it 'userが紐づいていなければ購入できない' do
+        @order_address.user_id = nil
+        @order_address.valid?
+        expect(@order_address.errors.full_messages).to include("User can't be blank")
+      end
+
+      it 'itemが紐づいていなければ購入できない' do
+        @order_address.item_id = nil
+        @order_address.valid?
+        expect(@order_address.errors.full_messages).to include("Item can't be blank")
       end
 
       it 'tokenが空では保存できない' do
